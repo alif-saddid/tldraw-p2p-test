@@ -14,8 +14,8 @@ const App: React.FC = () => {
 
   const draw = () => {
     const randX = Math.floor(Math.random() * 1000) + 100;
-      const randY = Math.floor(Math.random() * 1000) + 100;
-      const GUID = () => {
+    const randY = Math.floor(Math.random() * 1000) + 100;
+    const GUID = () => {
         var d = new Date().getTime();
         var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = (d + Math.random() * 16) % 16 | 0;
@@ -23,9 +23,10 @@ const App: React.FC = () => {
             return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
         });
         return guid;
-      }
-      const idd = GUID();
-      const shapes = JSON.stringify({
+    }
+    
+    const idd = GUID();
+    const shapes = JSON.stringify({
         idd: {
           "id": idd,
           "type": "rectangle",
@@ -55,11 +56,12 @@ const App: React.FC = () => {
           ]
         }
       })
-      doc.transact(() => {
-        Object.entries(JSON.parse(shapes)).forEach(([id, shape]) => {
-          yShapes.set(shape.id, shape);
-        });
+    
+    doc.transact(() => {
+      Object.entries(JSON.parse(shapes)).forEach(([id, shape]) => {
+        yShapes.set(shape.id, shape);
       });
+    });
   }
 
   React.useEffect(() => {
@@ -67,7 +69,9 @@ const App: React.FC = () => {
       console.log('Drawing')
       draw()
     }, 1000);
-  }, [])
+
+    return () => clearInterval(interval);
+  }, [draw])
 
   return (
     <div className="tldraw">
