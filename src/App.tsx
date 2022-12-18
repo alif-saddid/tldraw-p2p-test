@@ -8,25 +8,22 @@ import {
   yShapes
 } from "./store";
 
-const GUID = () => {
-  var d = new Date().getTime();
-  var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-      var r = (d + Math.random() * 16) % 16 | 0;
-      d = Math.floor(d / 16);
-      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-  });
-  return guid;
-}
-
 const App: React.FC = () => {
   const fileSystemEvents = useFileSystem();
   const multiplayerEvents = useMultiplayerState(roomID);
 
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      console.log('Drawing')
-      const randX = Math.floor(Math.random() * 1000) + 100;
+  const draw = () => {
+    const randX = Math.floor(Math.random() * 1000) + 100;
       const randY = Math.floor(Math.random() * 1000) + 100;
+      const GUID = () => {
+        var d = new Date().getTime();
+        var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = (d + Math.random() * 16) % 16 | 0;
+            d = Math.floor(d / 16);
+            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+        return guid;
+      }
       const idd = GUID();
       const shapes = JSON.stringify({
         idd: {
@@ -60,15 +57,17 @@ const App: React.FC = () => {
       })
       doc.transact(() => {
         Object.entries(JSON.parse(shapes)).forEach(([id, shape]) => {
-          if (!shape) {
-            yShapes.delete(id);
-          } else {
-            yShapes.set(shape.id, shape);
-          }
+          yShapes.set(shape.id, shape);
         });
       });
+  }
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      console.log('Drawing')
+      draw()
     }, 1000);
-  }, [doc, yShapes])
+  }, [])
 
   return (
     <div className="tldraw">

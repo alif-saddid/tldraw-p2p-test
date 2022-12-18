@@ -11,7 +11,10 @@ export const doc = new Y.Doc();
 export const roomID = `y-tldraw-${VERSION}`;
 
 // Create a websocket provider
-export const provider = new WebrtcProvider(roomID, doc);
+// @ts-ignore
+export const provider = new WebrtcProvider(roomID, doc, {
+    signaling: ['ws://107.178.219.37:4444'],
+  });
 
 // We persist the document content across sessions
 export const indexeddbProvider = new IndexeddbPersistence('y-indexeddb', doc)
